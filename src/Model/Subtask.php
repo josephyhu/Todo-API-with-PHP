@@ -39,16 +39,16 @@ class Subtask
         }
         return $subtask;
     }
-    public function createSubtask($data)
+    public function createSubtask()
     {
-        if (empty($data['task_id']) || empty($data['name']) || empty($data['status'])) {
+        if (empty($data['task_id']) || empty($data['name']) || empty($data['subtask_status'])) {
             throw new ApiException(ApiException::SUBTASK_INFO_REQUIRED);
         }
         $sql = 'INSERT INTO subtasks (task_id, name, status) VALUES (?, ?, ?)';
         $statement = $this->database->prepare($sql);
         $statement->bindParam(1, $data['task_id']);
         $statement->bindParam(2, $data['name']);
-        $statement->bindParam(3, $data['status']);
+        $statement->bindParam(3, $data['subtask_status']);
         $statement->execute();
         if ($statement->rowCount() < 1) {
             throw new ApiException(ApiException::SUBTASK_CREATION_FAILED);
@@ -57,13 +57,13 @@ class Subtask
     }
     public function updateSubtask($data)
     {
-        if (empty($data['name']) || empty($data['status']) || empty($data['subtask_id'])) {
+        if (empty($data['name']) || empty($data['subtask_status']) || empty($data['subtask_id'])) {
             throw new ApiException(ApiException::SUBTASK_INFO_REQUIRED);
         }
         $sql = 'UPDATE subtasks set name = ?, status = ? WHERE id = ?';
         $statement = $this->database->prepare($sql);
         $statement->bindParam(1, $data['name']);
-        $statement->bindParam(2, $data['status']);
+        $statement->bindParam(2, $data['subtask_status']);
         $statement->bindParam(3, $data['subtask_id']);
         $statement->execute();
         if ($statement->rowCount() < 1) {

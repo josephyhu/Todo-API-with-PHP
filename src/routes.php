@@ -31,6 +31,7 @@ $app->group('/api/v1/todos', function() use($app) {
     });
     $app->put('/{task_id}', function ($request, $response, $args) {
         $data = $request->getParsedBody();
+
         $data['task_id'] = $args['task_id'];
         $result = $this->task->updateTask($data);
         return $response->withJson($result, 201, JSON_PRETTY_PRINT);
@@ -41,7 +42,7 @@ $app->group('/api/v1/todos', function() use($app) {
     });
     $app->group('/{task_id}/subtasks', function () use ($app) {
         $app->get('', function ($request, $response, $args) {
-            $result = $this->review->getSubtasksByTaskId($args['task_id']);
+            $result = $this->subtask->getSubtasksByTaskId($args['task_id']);
             return $response->withJson($result, 200, JSON_PRETTY_PRINT);
         });
         $app->get('/{subtask_id}', function ($request, $response, $args) {
