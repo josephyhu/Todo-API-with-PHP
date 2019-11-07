@@ -39,7 +39,7 @@ class Subtask
         }
         return $subtask;
     }
-    public function createSubtask()
+    public function createSubtask($data)
     {
         if (empty($data['task_id']) || empty($data['name']) || !isset($data['subtask_status'])) {
             throw new ApiException(ApiException::SUBTASK_INFO_REQUIRED);
@@ -50,6 +50,7 @@ class Subtask
         $statement->bindParam(2, $data['name']);
         $statement->bindParam(3, $data['subtask_status']);
         $statement->execute();
+        var_dump($data);
         if ($statement->rowCount() < 1) {
             throw new ApiException(ApiException::SUBTASK_CREATION_FAILED);
         }
