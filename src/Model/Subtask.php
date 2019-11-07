@@ -5,7 +5,7 @@ use App\Exception\ApiException;
 class Subtask
 {
     protected $database;
-    public function ___construct(\PDO $database)
+    public function __construct(\PDO $database)
     {
         $this->database = $database;
     }
@@ -14,7 +14,7 @@ class Subtask
         if (empty($task_id)) {
             throw new ApiException(ApiException::SUBTASK_INFO_REQUIRED);
         }
-        $sql = 'SELECT * FROM subtasks JOIN tasks ON task_id = tasks.id WHERE task_id = ?';
+        $sql = 'SELECT * FROM subtasks WHERE task_id = ?';
         $statement = $this->database->prepare($sql);
         $statement->bindParam(1, $task_id);
         $statement->execute();
@@ -41,16 +41,15 @@ class Subtask
     }
     public function createSubtask($data)
     {
-        if (empty($data['task_id']) || empty($data['name']) || !isset($data['subtask_status'])) {
+        if (empty($data['name']) || !isset($data['subtask_status']) || empty($data['task_id'])) {
             throw new ApiException(ApiException::SUBTASK_INFO_REQUIRED);
         }
-        $sql = 'INSERT INTO subtasks (task_id, name, status) VALUES (?, ?, ?)';
+        $sql = 'INSERT INTO subtasks (name, status, task_id) VALUES (?, ?, ?)';
         $statement = $this->database->prepare($sql);
-        $statement->bindParam(1, $data['task_id']);
-        $statement->bindParam(2, $data['name']);
-        $statement->bindParam(3, $data['subtask_status']);
+        $statement->bindParam(1, $data['name']);
+        $statement->bindParam(2, $data['subtask_status']);
+        $statement->bindParam(3, $data['task_id']);
         $statement->execute();
-        var_dump($data);
         if ($statement->rowCount() < 1) {
             throw new ApiException(ApiException::SUBTASK_CREATION_FAILED);
         }
@@ -85,6 +84,6 @@ class Subtask
         if ($statement->rowCount() < 1) {
             throw new ApiException(ApiException::SUBTASK_DELETE_FAILED);
         }
-        return ['message' => 'The subtask waas deleted.'];
+        return ['message' => 'The subtask was deleted.'];
     }
 }
