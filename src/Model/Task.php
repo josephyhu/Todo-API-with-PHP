@@ -34,7 +34,7 @@ class Task
     }
     public function createTask($data)
     {
-        if (empty($data['task']) || empty($data['status'])) {
+        if (empty($data['task']) || !isset($data['status'])) {
             throw new ApiException(ApiException::TASK_INFO_REQUIRED);
         }
         $sql = 'INSERT INTO tasks (task, status) VALUES (?, ?)';
@@ -49,7 +49,7 @@ class Task
     }
     public function updateTask($data)
     {
-        if (empty($data['task']) || empty($data['status']) || empty($data['task_id'])) {
+        if (empty($data['task']) || !isset($data['status']) || empty($data['task_id'])) {
             throw new ApiException(ApiException::TASK_INFO_REQUIRED);
         }
         $sql = 'UPDATE tasks SET task = ?, status = ? WHERE id = ?';

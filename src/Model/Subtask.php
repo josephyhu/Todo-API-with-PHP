@@ -14,7 +14,7 @@ class Subtask
         if (empty($task_id)) {
             throw new ApiException(ApiException::SUBTASK_INFO_REQUIRED);
         }
-        $sql = 'SELECT * FROM subtasks WHERE task_id = ?';
+        $sql = 'SELECT * FROM subtasks JOIN tasks ON task_id = tasks.id WHERE task_id = ?';
         $statement = $this->database->prepare($sql);
         $statement->bindParam(1, $task_id);
         $statement->execute();
@@ -41,7 +41,7 @@ class Subtask
     }
     public function createSubtask()
     {
-        if (empty($data['task_id']) || empty($data['name']) || empty($data['subtask_status'])) {
+        if (empty($data['task_id']) || empty($data['name']) || !isset($data['subtask_status'])) {
             throw new ApiException(ApiException::SUBTASK_INFO_REQUIRED);
         }
         $sql = 'INSERT INTO subtasks (task_id, name, status) VALUES (?, ?, ?)';
@@ -57,7 +57,7 @@ class Subtask
     }
     public function updateSubtask($data)
     {
-        if (empty($data['name']) || empty($data['subtask_status']) || empty($data['subtask_id'])) {
+        if (empty($data['name']) || !isset($data['subtask_status']) || empty($data['subtask_id'])) {
             throw new ApiException(ApiException::SUBTASK_INFO_REQUIRED);
         }
         $sql = 'UPDATE subtasks set name = ?, status = ? WHERE id = ?';
