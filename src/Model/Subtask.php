@@ -14,9 +14,9 @@ class Subtask
         if (empty($task_id)) {
             throw new ApiException(ApiException::SUBTASK_INFO_REQUIRED);
         }
-        $sql = 'SELECT * FROM subtasks WHERE task_id = ?';
+        $sql = 'SELECT * FROM subtasks WHERE task_id = :task_id';
         $statement = $this->database->prepare($sql);
-        $statement->bindParam(1, $task_id);
+        $statement->bindParam('task_id', $task_id);
         $statement->execute();
         $subtasks = $statement->fetchAll();
         if (empty($subtasks)) {
@@ -29,9 +29,9 @@ class Subtask
         if (empty($subtask_id)) {
             throw new ApiException(ApiException::SUBTASK_INFO_REQUIRED);
         }
-        $sql = 'SELECT * FROM subtasks WHERE id = ?';
+        $sql = 'SELECT * FROM subtasks WHERE id = :id';
         $statement = $this->database->prepare($sql);
-        $statement->bindParam(1, $subtask_id);
+        $statement->bindParam('id', $subtask_id);
         $statement->execute();
         $subtask = $statement->fetch();
         if (empty($subtask)) {
@@ -44,11 +44,11 @@ class Subtask
         if (empty($data['name']) || !isset($data['subtask_status']) || empty($data['task_id'])) {
             throw new ApiException(ApiException::SUBTASK_INFO_REQUIRED);
         }
-        $sql = 'INSERT INTO subtasks (name, status, task_id) VALUES (?, ?, ?)';
+        $sql = 'INSERT INTO subtasks (name, status, task_id) VALUES (:name, :status, :task_id)';
         $statement = $this->database->prepare($sql);
-        $statement->bindParam(1, $data['name']);
-        $statement->bindParam(2, $data['subtask_status']);
-        $statement->bindParam(3, $data['task_id']);
+        $statement->bindParam('name', $data['name']);
+        $statement->bindParam('status', $data['subtask_status']);
+        $statement->bindParam('task_id', $data['task_id']);
         $statement->execute();
         if ($statement->rowCount() < 1) {
             throw new ApiException(ApiException::SUBTASK_CREATION_FAILED);
@@ -60,11 +60,11 @@ class Subtask
         if (empty($data['name']) || !isset($data['subtask_status']) || empty($data['subtask_id'])) {
             throw new ApiException(ApiException::SUBTASK_INFO_REQUIRED);
         }
-        $sql = 'UPDATE subtasks set name = ?, status = ? WHERE id = ?';
+        $sql = 'UPDATE subtasks set name = :name, status = :status WHERE id = :id';
         $statement = $this->database->prepare($sql);
-        $statement->bindParam(1, $data['name']);
-        $statement->bindParam(2, $data['subtask_status']);
-        $statement->bindParam(3, $data['subtask_id']);
+        $statement->bindParam('name', $data['name']);
+        $statement->bindParam('status', $data['subtask_status']);
+        $statement->bindParam('id', $data['subtask_id']);
         $statement->execute();
         if ($statement->rowCount() < 1) {
             throw new ApiException(ApiException::SUBTASK_UPDATE_FAILED);
@@ -77,9 +77,9 @@ class Subtask
             throw new ApiException(ApiException::SUBTASK_INFO_REQUIRED);
         }
         $this->getSubtask($subtask_id);
-        $sql = 'DELETE FROM subtasks WHERE id = ?';
+        $sql = 'DELETE FROM subtasks WHERE id = :id';
         $statement = $this->database->prepare($sql);
-        $statement->bindParam(1, $subtask_id);
+        $statement->bindParam('id', $subtask_id);
         $statement->execute();
         if ($statement->rowCount() < 1) {
             throw new ApiException(ApiException::SUBTASK_DELETE_FAILED);

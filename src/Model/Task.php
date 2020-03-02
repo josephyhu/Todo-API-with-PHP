@@ -22,9 +22,9 @@ class Task
     }
     public function getTask($task_id)
     {
-        $sql = 'SELECT * FROM tasks WHERE id = ?';
+        $sql = 'SELECT * FROM tasks WHERE id = :id';
         $statement = $this->database->prepare($sql);
-        $statement->bindParam(1, $task_id);
+        $statement->bindParam('id', $task_id);
         $statement->execute();
         $task = $statement->fetch();
         if (empty($task)) {
@@ -37,10 +37,10 @@ class Task
         if (empty($data['task']) || !isset($data['status'])) {
             throw new ApiException(ApiException::TASK_INFO_REQUIRED);
         }
-        $sql = 'INSERT INTO tasks (task, status) VALUES (?, ?)';
+        $sql = 'INSERT INTO tasks (task, status) VALUES (:task, :status)';
         $statement = $this->database->prepare($sql);
-        $statement->bindParam(1, $data['task']);
-        $statement->bindParam(2, $data['status']);
+        $statement->bindParam('task', $data['task']);
+        $statement->bindParam('status', $data['status']);
         $statement->execute();
         if ($statement->rowCount() < 1) {
             throw new ApiException(ApiException::TASK_CREATION_FAILED);
@@ -52,11 +52,11 @@ class Task
         if (empty($data['task']) || !isset($data['status']) || empty($data['task_id'])) {
             throw new ApiException(ApiException::TASK_INFO_REQUIRED);
         }
-        $sql = 'UPDATE tasks SET task = ?, status = ? WHERE id = ?';
+        $sql = 'UPDATE tasks SET task = :task, status = :status WHERE id = :id';
         $statement = $this->database->prepare($sql);
-        $statement->bindParam(1, $data['task']);
-        $statement->bindParam(2, $data['status']);
-        $statement->bindParam(3, $data['task_id']);
+        $statement->bindParam('task', $data['task']);
+        $statement->bindParam('status', $data['status']);
+        $statement->bindParam('id', $data['task_id']);
         $statement->execute();
         if ($statement->rowCount() < 1) {
             throw new ApiException(ApiException::TASK_UPDATE_FAILED);
@@ -66,9 +66,9 @@ class Task
     public function deleteTask($task_id)
     {
         $this->getTask($task_id);
-        $sql = 'DELETE FROM tasks WHERE id = ?';
+        $sql = 'DELETE FROM tasks WHERE id = :id';
         $statement = $this->database->prepare($sql);
-        $statement->bindParam(1, $task_id);
+        $statement->bindParam('id', $task_id);
         $statement->execute();
         if ($statement->rowCount() < 1) {
             throw new ApiException(ApiException::TASK_DELETE_FAILED);
