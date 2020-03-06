@@ -7,13 +7,13 @@ $app->get('/', function ($request, $response, $args) {
         'single task' => $this->api['api_url'] . '/todos/{task_id}',
         'subtasks by task' => $this->api['api_url'] . '/todos/{task_id}/subtasks',
         'single subtask' => $this->api['api_url'] . '/todos/{task_id}/subtasks/{subtask_id}',
+        'help' => $this->api['base_url'] . '/',
     ];
     $result = [
         'endpoints' => $endpoints,
         'version' => $this->api['version'],
         'timestamp' => time(),
     ];
-    $result = $this->task->getTasks();
     return $response->withJson($result, 200, JSON_PRETTY_PRINT);
 });
 $app->group('/api/v1/todos', function() use($app) {
